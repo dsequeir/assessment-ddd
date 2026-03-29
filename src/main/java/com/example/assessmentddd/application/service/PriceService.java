@@ -2,6 +2,7 @@ package com.example.assessmentddd.application.service;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
+import com.example.assessmentddd.domain.model.Price;
 import com.example.assessmentddd.domain.port.PricePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 /**
  * Application service responsible for retrieving the applicable price
@@ -36,14 +38,22 @@ public class PriceService {
         log.debug("Cache miss - resolving price for date={}, productId={}, brandId={}",
                 applicationDate, productId, brandId);
 
-        return pricePort.findByApplicationDateProductAndBrand(applicationDate, productId, brandId)
-                .map(p -> new PriceResponse(p.getProductId(), p.getBrandId(), p.getPriceList(),
-                        p.getStartDate(), p.getEndDate(), p.getPrice()))
+        Price selectedPrice = pricePort.findApplicablePrices(applicationDate, productId, brandId)
+                .stream()
+                .max(Comparator.comparingInt(Price::getPriority))
                 .orElseThrow(() -> {
                     log.warn("Price not found for productId={}, brandId={}, date={}",
                             productId, brandId, applicationDate);
-
                     return new PriceNotFoundException("No price found");
                 });
+
+        return new PriceResponse(
+                selectedPrice.getProductId(),
+                selectedPrice.getBrandId(),
+                selectedPrice.getPriceList(),
+                selectedPrice.getStartDate(),
+                selectedPrice.getEndDate(),
+                selectedPrice.getPrice()
+        );
     }
 }

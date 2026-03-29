@@ -1,48 +1,161 @@
-# Assessment Instructions
+# Price API – Assessment
 
+## Overview
 
-En la base de datos de comercio electrónico de la compañía disponemos de la tabla PRICES que refleja el precio final (pvp) y la tarifa que aplica a un producto de una cadena entre unas fechas determinadas. A continuación se muestra un ejemplo de la tabla con los campos relevantes:
+This project implements a REST API to retrieve the applicable price for a given product, brand, and application date.
 
-PRICES
--------
+The solution focuses on:
 
-BRAND_ID         START_DATE                                    END_DATE                        PRICE_LIST                   PRODUCT_ID  PRIORITY                 PRICE           CURR
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1         2020-06-14-00.00.00                        2020-12-31-23.59.59                        1                        35455                0                        35.50            EUR
-1         2020-06-14-15.00.00                        2020-06-14-18.30.00                        2                        35455                1                        25.45            EUR
-1         2020-06-15-00.00.00                        2020-06-15-11.00.00                        3                        35455                1                        30.50            EUR
-1         2020-06-15-16.00.00                        2020-12-31-23.59.59                        4                        35455                1                        38.95            EUR
+* clean architecture
+* performance optimization
+* observability
+* clear technical decision-making
+* Requirements
+* Java 25
+* Maven 3.9+
+* Spring Boot 4.0.4
 
-Campos:
+No external infrastructure required (H2 + embedded Hazelcast)
 
-BRAND_ID: foreign key de la cadena del grupo (1 = ZARA).
-START_DATE , END_DATE: rango de fechas en el que aplica el precio tarifa indicado.
-PRICE_LIST: Identificador de la tarifa de precios aplicable.
-PRODUCT_ID: Identificador código de producto.
-PRIORITY: Desambiguador de aplicación de precios. Si dos tarifas coinciden en un rago de fechas se aplica la de mayor prioridad (mayor valor numérico).
-PRICE: precio final de venta.
-CURR: iso de la moneda.
+### Technology Stack
 
-Se pide:
+* Spring Boot – application framework
+* Spring Web – REST API
+* Spring Cache – caching abstraction
+* Hazelcast – in-memory distributed cache
+* H2 Database – in-memory persistence
+* SpringDoc OpenAPI – API documentation
+* SLF4J + Logback – logging
+* JUnit + MockMvc – integration testing
 
-Construir una aplicación/servicio en SpringBoot que provea una end point rest de consulta  tal que:
+## Architectural Decisions
 
-Acepte como parámetros de entrada: fecha de aplicación, identificador de producto, identificador de cadena.
-Devuelva como datos de salida: identificador de producto, identificador de cadena, tarifa a aplicar, fechas de aplicación y precio final a aplicar.
+* Layered / Hexagonal-inspired design
+* The application separates concerns into:
+- Controller (API layer)
+- Service (application logic)
+- Port/Adapter (data access abstraction)
 
-Se debe utilizar una base de datos en memoria (tipo h2) e inicializar con los datos del ejemplo, (se pueden cambiar el nombre de los campos y añadir otros nuevos si se quiere, elegir el tipo de dato que se considere adecuado para los mismos).
+This improves:
 
-Desarrollar unos test al endpoint rest que  validen las siguientes peticiones al servicio con los datos del ejemplo:
+* testability
+* maintainability
+* flexibility of infrastructure changes
+* Caching Strategy
 
--          Test 1: petición a las 10:00 del día 14 del producto 35455   para la brand 1 (ZARA)
--          Test 2: petición a las 16:00 del día 14 del producto 35455   para la brand 1 (ZARA)
--          Test 3: petición a las 21:00 del día 14 del producto 35455   para la brand 1 (ZARA)
--          Test 4: petición a las 10:00 del día 15 del producto 35455   para la brand 1 (ZARA)
--          Test 5: petición a las 21:00 del día 16 del producto 35455   para la brand 1 (ZARA)
+Caching is implemented using Spring Cache:
 
+`c@Cacheable(...)`
 
-Se valorará:
+and configured in Hazelcast:
 
-Diseño y construcción del servicio.
-Calidad de Código.
-Resultados correctos en los test.
+* TTL: 300 seconds
+* Max entries: 1000 per node
+* Eviction policy: LRU
+
+## Database Optimization
+
+A composite index was introduced:
+
+`(BRAND_ID, PRODUCT_ID, START_DATE, END_DATE)`
+
+Aligned with query pattern:
+
+* equal filters first
+* range filters after
+
+## Error Handling
+
+Centralized exception handling using @RestControllerAdvice ensures:
+
+consistent API responses
+proper HTTP status mapping
+
+### Trade-offs
+
+* Caching vs Data Freshness
+* Cached results may become stale
+* Mitigated using TTL
+* Indexing vs Write Cost
+* Improves read performance
+* Adds slight overhead on writes
+* Simplicity vs Production Readiness
+* Embedded H2 and Hazelcast used for simplicity
+* Production would require external systems
+
+## Performance
+Methodology
+Integration tests using MockMvc
+Warm-up phase included
+100 iterations per scenario
+Fixed input parameters
+Measured using System.nanoTime()
+Results
+Scenario	Avg Response Time
+No index / No cache	2.27 ms
+Index / No cache	1.62 ms
+Index + Cache (repeated calls)	1.07 ms
+Analysis
+Indexing reduced query time by ~28%
+Caching reduced response time by ~34%
+Total improvement ~53%
+
+## Observability
+Logging Strategy: 
+* INFO → request tracing (controller)
+* DEBUG → internal processing and cache miss (service)
+* WARN → business issues
+
+* Principles
+minimal and meaningful logging
+contextual data included
+separation by layer
+Production Considerations
+Environment Configuration
+
+Profiles:
+
+local
+test
+prod
+spring:
+profiles:
+active: prod
+Caching
+external Hazelcast cluster or Redis
+TTL tuning
+monitor cache hit ratio
+Database
+replace H2 with PostgreSQL/MySQL
+validate indexing with real data
+
+## Security
+
+Recommended:
+
+* OAuth2 (client credentials / auth code)
+* OIDC for identity
+* HTTPS mandatory
+* mTLS for service-to-service
+* API Gateway + rate limiting
+* Observability (advanced)
+* Micrometer + Prometheus
+* OpenTelemetry tracing
+* Centralized logging (ELK/Grafana)
+
+## High-Level Architecture
+
+## Possible Improvements
+* Cache hit/miss metrics
+* Load testing
+* Circuit breaker
+* Contract testing
+* Validation improvements
+
+## Conclusion
+
+This solution prioritizes:
+
+simplicity
+performance through measurable improvements
+maintainable architecture

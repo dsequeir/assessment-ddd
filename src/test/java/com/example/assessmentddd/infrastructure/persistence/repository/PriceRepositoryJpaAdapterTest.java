@@ -7,7 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -34,19 +35,19 @@ class PriceRepositoryJpaAdapterTest {
         price.setPriceList(2);
         price.setPriority(1);
 
-        when(repository.findFirstByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandIdOrderByPriorityDesc(
+        when(repository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                 applicationDate,
                 applicationDate,
                 35455,
                 1
-        )).thenReturn(Optional.of(price));
+        )).thenReturn(List.of(price));
 
-        Optional<Price> result = adapter.findByApplicationDateProductAndBrand(applicationDate, 35455, 1);
+        List<Price> result = adapter.findApplicablePrices(applicationDate, 35455, 1);
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo(price);
+        assertThat(result).isNotEmpty();
+        assertThat(result.getFirst()).isEqualTo(price);
 
-        verify(repository).findFirstByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandIdOrderByPriorityDesc(
+        verify(repository).findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                 applicationDate,
                 applicationDate,
                 35455,
@@ -59,18 +60,18 @@ class PriceRepositoryJpaAdapterTest {
     void shouldReturnEmptyWhenRepositoryReturnsEmpty() {
         LocalDateTime applicationDate = LocalDateTime.of(2020, 6, 14, 10, 0);
 
-        when(repository.findFirstByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandIdOrderByPriorityDesc(
+        when(repository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                 applicationDate,
                 applicationDate,
                 35455,
                 1
-        )).thenReturn(Optional.empty());
+        )).thenReturn(Collections.emptyList());
 
-        Optional<Price> result = adapter.findByApplicationDateProductAndBrand(applicationDate, 35455, 1);
+        List<Price> result = adapter.findApplicablePrices(applicationDate, 35455, 1);
 
         assertThat(result).isEmpty();
 
-        verify(repository).findFirstByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandIdOrderByPriorityDesc(
+        verify(repository).findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                 applicationDate,
                 applicationDate,
                 35455,

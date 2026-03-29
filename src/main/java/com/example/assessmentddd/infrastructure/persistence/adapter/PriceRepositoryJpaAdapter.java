@@ -6,7 +6,7 @@ import com.example.assessmentddd.infrastructure.persistence.repository.SpringDat
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 
 @Repository
@@ -18,14 +18,11 @@ public class PriceRepositoryJpaAdapter implements PricePort {
         this.repository = repository;
     }
 
+
     @Override
-    public Optional<Price> findByApplicationDateProductAndBrand(
-            LocalDateTime date,
-            Integer productId,
-            Integer brandId
-    ) {
+    public List<Price> findApplicablePrices(LocalDateTime date, Integer productId, Integer brandId) {
         return repository
-                .findFirstByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandIdOrderByPriorityDesc(
+                .findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                         date, date, productId, brandId
                 );
     }
