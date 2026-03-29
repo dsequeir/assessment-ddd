@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: assessment-ddd
+
+  cache:
+    type: hazelcast
+
+  devtools:
+    restart:
+      enabled: false
+
+  datasource:
+    url: jdbc:h2:mem:assessment
+    username: user-assessment
+    password: pwd-assessment
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:01_schema.sql
+      data-locations: classpath:01_data.sql
+      continue-on-error: false
+
+  springdoc:
+    api-docs:
+      enabled: false
+    swagger-ui:
+      url: /openapi.yaml
+
+logging:
+  level:
+    root: INFO
+    com.example.assessmentddd: DEBUG
