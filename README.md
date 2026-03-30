@@ -3,6 +3,7 @@
 ## Overview
 
 This project implements a REST API to retrieve the applicable price for a given product, brand, and application date.
+The applicable price is the top priority, if several are applicable. 
 
 The solution focuses on:
 
@@ -12,7 +13,7 @@ The solution focuses on:
 * simplicity
 
 ## Technology Stack
-
+* 
 * Java 25
 * Spring Boot 4.0.4
 * Spring Boot – application framework
@@ -24,13 +25,59 @@ The solution focuses on:
 * SLF4J + Logback – logging
 * JUnit + MockMvc – integration testing
 
+## Instalation & Testing
+
+Tha application can be run via:
+
+```bash
+    ./mvnw spring-boot:run
+```
+
+The application will start on localhost, port 8080
+
+To run the tests:
+
+```bash
+./mvnw test
+```
+
+To Verify the application:
+
+Once the application is running, you can test the API using:
+
+* Valid request with price found: 
+* 
+```bash 
+curl "http://localhost:8080/api/v1/prices?applicationDate=2020-06-14T10:00:00&productId=35455&brandId=1"
+```
+* Valid request with no price found:
+
+```bash
+* curl "http://localhost:8080/api/v1/prices?applicationDate=2020-06-09T10:00:00&productId=35455&brandId=1"
+```
+
+* Invalid request:
+
+```bash 
+curl "http://localhost:8080/api/v1/prices?productId=35455&brandId=1"
+```
+## API Documentation
+
+ Available via Swagger:
+ 
+http://localhost:8080/swagger-ui.html
+
 ## Architectural Decisions
 
 * Layered / Hexagonal-inspired design
 * The application separates concerns into:
 - Controller (API layer)
-- Service (application logic)
+- Service (application layer)
 - Port/Adapter (data access abstraction)
+* The main packages are:
+- Application (Orchestration)
+- Doamin (Use case)
+- Infrastructure (Web & Data access)
 
 This improves:
 
@@ -38,7 +85,32 @@ This improves:
 * maintainability
 * flexibility of infrastructure changes
 
-## Caching Strategy
+## Observability
+Logging Strategy:
+* INFO → request tracing (controller)
+* DEBUG → internal processing and cache miss (service)
+* WARN → business issues
+
+* Principles
+- minimal and meaningful logging
+- contextual data included
+- separation by layer
+
+## Error Handling
+
+Centralized exception handling using @RestControllerAdvice ensures:
+
+* consistent API responses
+* proper HTTP status mapping
+
+## Performance
+
+* Tested via Integration tests using MockMvc
+* Warm-up phase included
+* Measured 100 iterations per scenario
+* Measured using System.nanoTime()
+
+### Caching Strategy
 
 Caching is implemented using Spring Cache:
 
@@ -56,12 +128,19 @@ A composite index was introduced:
 
 `(BRAND_ID, PRODUCT_ID, START_DATE, END_DATE)`
 
-## Error Handling
+### Results
 
-Centralized exception handling using @RestControllerAdvice ensures:
+| Scenario	           | Avg Response Time  |
+|:--------------------|:-------------------|
+| No index / No cache | 	 2.27 ms        |
+| Index / No cache	   | 1.62 ms            |
+| Index + Cache       | 	 1.07 ms        |
 
-* consistent API responses
-* proper HTTP status mapping
+### Analysis
+
+- Indexing reduced query time by ~28%
+- Caching reduced response time by ~34%
+- Total improvement ~53%
 
 ### Trade-offs
 
@@ -75,53 +154,8 @@ Centralized exception handling using @RestControllerAdvice ensures:
 * Embedded H2 and Hazelcast used for simplicity
 * Production would require external systems
 
-## Performance
-* Tested via Integration tests using MockMvc
-* Warm-up phase included
-* Measured 100 iterations per scenario
-* Measured using System.nanoTime()
-
-### Results
-
-| Scenario	           | Avg Response Time  |
-|:--------------------|:-------------------|
-| No index / No cache | 	 2.27 ms        |
-| Index / No cache	   | 1.62 ms            |
-| Index + Cache       | 	 1.07 ms        |
-
-### Analysis
-- Indexing reduced query time by ~28%
-- Caching reduced response time by ~34%
-- Total improvement ~53%
-
-## Observability
-Logging Strategy: 
-* INFO → request tracing (controller)
-* DEBUG → internal processing and cache miss (service)
-* WARN → business issues
-
-* Principles
-- minimal and meaningful logging
-- contextual data included
-- separation by layer
-
-## Security
-
-Recommended:
-
-* OAuth2 (client credentials / auth code)
-* OIDC for identity
-* HTTPS mandatory
-* mTLS for service-to-service
-* API Gateway + rate limiting
-* Observability (advanced)
-* Micrometer + Prometheus
-* OpenTelemetry tracing
-* Centralized logging (ELK/Grafana)
-
-## High-Level Architecture
-
 ## Possible Improvements
+
 * Cache hit/miss metrics
 * Load testing
 * Error resilience/Circuit breaker
@@ -135,9 +169,23 @@ Recommended:
 - Validate indexing with real data
 - Local/Test/Live environment configurations
 
+### Security
+
+Recommended:
+
+* OAuth2 (client credentials / auth code)
+* OIDC for identity
+* HTTPS mandatory
+* mTLS for service-to-service
+* API Gateway + rate limiting
+* Observability (advanced)
+* Micrometer + Prometheus
+* OpenTelemetry tracing
+* Centralized logging (ELK/Grafana)
+
 ## Conclusion
 
-This solution prioritizes:
+**This solution prioritizes:**
 
 * simplicity over production readiness
 * performance through measurable improvements

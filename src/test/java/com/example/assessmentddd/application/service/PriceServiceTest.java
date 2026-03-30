@@ -5,6 +5,7 @@ import com.example.assessmentddd.application.exception.PriceNotFoundException;
 import com.example.assessmentddd.domain.model.Price;
 import com.example.assessmentddd.domain.port.PricePort;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,7 +44,8 @@ class PriceServiceTest {
     }
 
     @Test
-    void getPrice_found_returnsResponse() {
+    @DisplayName("Should return price 35.50 for 2020-06-14 10:00")
+    void shouldReturnPrice35_50() {
 
         LocalDateTime date = LocalDateTime.parse("2020-06-14T10:00:00");
         when(pricePort.findApplicablePrices(date, 35455, 1))
@@ -58,7 +60,8 @@ class PriceServiceTest {
     }
 
     @Test
-    void getPrice_notFound_throwsPriceNotFoundException() {
+    @DisplayName("Should return no price for 2020-01-01 10:00")
+    void shouldReturnNoPrice() {
         LocalDateTime date = LocalDateTime.parse("2020-01-01T10:00:00");
         when(pricePort.findApplicablePrices(date, 99999, 999))
                 .thenReturn(Collections.emptyList());
@@ -71,7 +74,8 @@ class PriceServiceTest {
     }
 
     @Test
-    void getPrice_callsPortOnce() {
+    @DisplayName("Should call PricePort once ")
+    void shouldCallPricePortOnce() {
 
         LocalDateTime date = LocalDateTime.parse("2020-06-14T10:00:00");
         when(pricePort.findApplicablePrices(any(), anyInt(), anyInt()))

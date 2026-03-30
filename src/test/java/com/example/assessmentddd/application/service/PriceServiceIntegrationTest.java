@@ -1,6 +1,8 @@
 package com.example.assessmentddd.application.service;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
+import com.example.assessmentddd.application.exception.PriceNotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class PriceServiceIntegrationTest {
@@ -18,9 +21,9 @@ public class PriceServiceIntegrationTest {
     private PriceService priceService;
 
     @Sql(scripts = {"/01_test_data.sql"})
+    @DisplayName("Should return 35.50 price for 2020-06-14 10:00")
     @Test
-    void test1_14h10_returnsPriceList1_35_50() {
-        // 10:00 día 14 → priceList 1, 35.50 (priority 0)
+    void shouldReturnPrice35_50() {
         PriceResponse result = priceService.getPrice(
                 LocalDateTime.parse("2020-06-14T10:00:00"), 35455, 1);
 
@@ -31,14 +34,25 @@ public class PriceServiceIntegrationTest {
     }
 
     @Sql(scripts = {"/01_test_data.sql"})
+    @DisplayName("Should return 25.45 price for 2020-06-14 16:00")
     @Test
-    void test2_14h16_returnsPriceList2_25_45() {
-        // 16:00 día 14 → priceList 2, 25.45 (priority 1, 15-18:30)
+    void shouldReturnPrice25_45() {
         PriceResponse result = priceService.getPrice(
                 LocalDateTime.parse("2020-06-14T16:00:00"), 35455, 1);
 
         assertThat(result.priceList()).isEqualTo(2);
         assertThat(result.price()).isEqualByComparingTo(new BigDecimal("25.45"));
+    }
+
+    @Sql(scripts = {"/01_test_data.sql"})
+    @DisplayName("Should not return any price for 2020-06-10 16:00")
+    @Test
+    void shouldReturnNoPrice() {
+        PriceNotFoundException exception = assertThrows(PriceNotFoundException.class, () ->
+                priceService.getPrice(
+                        LocalDateTime.parse("2020-06-10T16:00:00"), 35455, 1));
+
+        assertThat(exception.getMessage()).isEqualTo("No price found");
     }
 
 }

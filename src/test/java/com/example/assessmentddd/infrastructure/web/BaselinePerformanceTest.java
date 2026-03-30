@@ -1,11 +1,16 @@
 package com.example.assessmentddd.infrastructure.web;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,17 +25,19 @@ public class BaselinePerformanceTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private static final Logger log = LoggerFactory.getLogger(BaselinePerformanceTest.class);
     private static final int WARMUP_ITERATIONS = 20;
     private static final int MEASURE_ITERATIONS = 100;
 
     @Test
-    void shouldMeasurePerformanceWithoutIndex() throws Exception {
+    @DisplayName("Should measure Performance")
+    void shouldMeasurePerformance() throws Exception {
 
-          for (int i = 0; i < WARMUP_ITERATIONS; i++) {
+        for (int i = 0; i < WARMUP_ITERATIONS; i++) {
             executeRequest();
         }
 
-                long start = System.nanoTime();
+        long start = System.nanoTime();
 
         for (int i = 0; i < MEASURE_ITERATIONS; i++) {
             executeRequest();
@@ -38,12 +45,12 @@ public class BaselinePerformanceTest {
 
         long end = System.nanoTime();
 
-        long totalMs = (end - start) / 1_000_000;
+        long totalMs = TimeUnit.NANOSECONDS.toMillis(end - start);
         double avgMs = (double) totalMs / MEASURE_ITERATIONS;
 
-        System.out.println("==== PERFORMANCE (INDEX & CACHE) ====");
-        System.out.println("Total time: " + totalMs + " ms");
-        System.out.println("Average time: " + avgMs + " ms");
+        log.debug("==== PERFORMANCE (INDEX & CACHE) ====");
+        log.debug("Total time: {} ms", totalMs);
+        log.debug("Average time: {} ms", avgMs);
     }
 
     private void executeRequest() throws Exception {
