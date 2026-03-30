@@ -1,15 +1,14 @@
 package com.example.assessmentddd.infrastructure.persistence;
 
-import com.example.assessmentddd.domain.model.PriceDto;
+import com.example.assessmentddd.domain.model.Price;
 import com.example.assessmentddd.infrastructure.persistence.entity.PriceEntity;
 
 public class PriceMapper {
     private PriceMapper() {
     }
 
-    public static PriceDto toDomain(PriceEntity entity) {
-        return new PriceDto(
-                entity.getId(),
+    public static Price toDomain(PriceEntity entity) {
+        return new Price(
                 entity.getBrandId(),
                 entity.getStartDate(),
                 entity.getEndDate(),
@@ -21,9 +20,8 @@ public class PriceMapper {
         );
     }
 
-    public static PriceEntity toEntity(PriceDto price) {
+    public static PriceEntity toEntity(Price price) {
         return new PriceEntity(
-                price.getId(),
                 price.getBrandId(),
                 price.getStartDate(),
                 price.getEndDate(),

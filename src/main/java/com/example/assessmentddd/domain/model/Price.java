@@ -1,8 +1,5 @@
 package com.example.assessmentddd.domain.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -10,10 +7,8 @@ import java.time.LocalDateTime;
  * Domain entity representing a price applicable to a product
  * within a specific time range and priority.
  */
-public class PriceDto {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Price {
+
     private Integer brandId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -23,10 +18,9 @@ public class PriceDto {
     private BigDecimal price;
     private String currency = "EUR";
 
-    public PriceDto() {}
+    public Price() {}
 
-    public PriceDto(Long id, Integer brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency) {
-        this.id = id;
+    public Price(Integer brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency) {
         this.brandId = brandId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -35,14 +29,6 @@ public class PriceDto {
         this.priority = priority;
         this.price = price;
         this.currency = currency;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Integer getBrandId() {

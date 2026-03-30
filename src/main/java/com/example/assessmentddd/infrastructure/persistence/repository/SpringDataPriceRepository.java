@@ -1,6 +1,5 @@
 package com.example.assessmentddd.infrastructure.persistence.repository;
 
-import com.example.assessmentddd.domain.model.PriceDto;
 import com.example.assessmentddd.infrastructure.persistence.entity.PriceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ package com.example.assessmentddd.application.service;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
-import com.example.assessmentddd.domain.model.PriceDto;
+import com.example.assessmentddd.domain.model.Price;
 import com.example.assessmentddd.domain.port.PricePort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,9 @@ public class PriceService {
         log.debug("Cache miss - resolving price for date={}, productId={}, brandId={}",
                 applicationDate, productId, brandId);
 
-        PriceDto selectedPrice = pricePort.findApplicablePrices(applicationDate, productId, brandId)
+        Price selectedPrice = pricePort.findApplicablePrices(applicationDate, productId, brandId)
                 .stream()
-                .max(Comparator.comparingInt(PriceDto::getPriority))
+                .max(Comparator.comparingInt(Price::getPriority))
                 .orElseThrow(() -> {
                     log.warn("Price not found for productId={}, brandId={}, date={}",
                             productId, brandId, applicationDate);
