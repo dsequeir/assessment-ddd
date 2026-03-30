@@ -2,7 +2,7 @@ package com.example.assessmentddd.application.service;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
-import com.example.assessmentddd.domain.model.Price;
+import com.example.assessmentddd.domain.model.PriceDto;
 import com.example.assessmentddd.domain.port.PricePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,11 +29,11 @@ class PriceServiceTest {
     @InjectMocks
     private PriceService priceService;
 
-    private Price testPrice;
+    private PriceDto testPrice;
 
     @BeforeEach
     void setUp() {
-        testPrice = new Price();
+        testPrice = new PriceDto();
         testPrice.setBrandId(1);
         testPrice.setProductId(35455);
         testPrice.setPriceList(1);

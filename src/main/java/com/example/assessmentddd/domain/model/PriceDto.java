@@ -1,9 +1,7 @@
 package com.example.assessmentddd.domain.model;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,9 +10,7 @@ import java.time.LocalDateTime;
  * Domain entity representing a price applicable to a product
  * within a specific time range and priority.
  */
-@Entity
-@Table(name = "prices")
-public class Price {
+public class PriceDto {
     @Id
     @GeneratedValue
     private Long id;
@@ -25,21 +21,20 @@ public class Price {
     private Integer productId;
     private Integer priority;
     private BigDecimal price;
-    private String curr = "EUR";
+    private String currency = "EUR";
 
-    public Price() {}
+    public PriceDto() {}
 
-    public Price(Integer priority, Long id, Integer brandId, LocalDateTime startDate, LocalDateTime endDate,
-                 Integer priceList, Integer productId, BigDecimal price, String curr) {
-        this.priority = priority;
+    public PriceDto(Long id, Integer brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency) {
         this.id = id;
         this.brandId = brandId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.priceList = priceList;
         this.productId = productId;
+        this.priority = priority;
         this.price = price;
-        this.curr = curr;
+        this.currency = currency;
     }
 
     public Long getId() {
@@ -106,11 +101,11 @@ public class Price {
         this.price = price;
     }
 
-    public String getCurr() {
-        return curr;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setCurr(String curr) {
-        this.curr = curr;
+    public void setCurrency(String curr) {
+        this.currency = curr;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.assessmentddd.infrastructure.persistence.adapter;
 
-import com.example.assessmentddd.domain.model.Price;
+import com.example.assessmentddd.infrastructure.persistence.entity.PriceEntity;
 import com.example.assessmentddd.infrastructure.persistence.repository.SpringDataPriceRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class SpringDataPriceRepositoryTest {
     @Test
     @DisplayName("should return highest priority applicable price")
     void shouldReturnHighestPriorityApplicablePrice() {
-        List<Price> result =
+        List<PriceEntity> result =
                 repository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                         LocalDateTime.of(2020, 6, 14, 16, 0),
                         LocalDateTime.of(2020, 6, 14, 16, 0),
@@ -35,14 +35,14 @@ class SpringDataPriceRepositoryTest {
         assertThat(result).isNotEmpty();
         assertEquals(4, result.size());
         assertThat(result)
-                .extracting(Price::getPriority)
+                .extracting(PriceEntity::getPriority)
                 .containsExactlyInAnyOrder(0, 0, 1, 1);
     }
 
     @Test
     @DisplayName("should return empty when no applicable price exists")
     void shouldReturnEmptyWhenNoApplicablePriceExists() {
-        List<Price> result =
+        List<PriceEntity> result =
                 repository.findByStartDateLessThanEqualAndEndDateGreaterThanEqualAndProductIdAndBrandId(
                         LocalDateTime.of(2020, 6, 14, 10, 0),
                         LocalDateTime.of(2020, 6, 14, 10, 0),

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS prices (
                                       product_id INTEGER NOT NULL,
                                       priority INTEGER NOT NULL,
                                       price DECIMAL(10,2) NOT NULL,
-                                      curr VARCHAR(3) DEFAULT 'EUR'
+                                      currency VARCHAR(3) DEFAULT 'EUR'
     );
 
 CREATE INDEX IF NOT EXISTS IDX_PRICES_BRAND_PRODUCT_DATES
