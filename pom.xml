@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>assessment-ddd</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>assessment-ddd-prices</name>
+    <name>assessment-ddd</name>
     <description>Spring Boot microservice for price calculation following Hexagonal principles</description>
     <url/>
     <licenses>
@@ -25,9 +25,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://github.com/dsequeir/assessment-ddd-prices.git</connection>
-        <developerConnection>scm:git:git@github.com:dsequeir/assessment-ddd-prices.git</developerConnection>
-        <url>https://github.com/dsequeir/assessment-ddd-prices</url>
+        <connection>scm:git:https://github.com/dsequeir/assessment-ddd.git</connection>
+        <developerConnection>scm:git:git@github.com:dsequeir/assessment-ddd.git</developerConnection>
+        <url>https://github.com/dsequeir/assessment-ddd</url>
         <tag>HEAD</tag>
     </scm>
     <properties>
@@ -48,22 +48,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

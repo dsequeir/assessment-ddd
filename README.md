@@ -25,7 +25,7 @@ The solution focuses on:
 * SLF4J + Logback – logging
 * JUnit + MockMvc – integration testing
 
-## Instalation & Testing
+## Installation & Testing
 
 Tha application can be run via:
 
@@ -76,7 +76,7 @@ http://localhost:8080/swagger-ui.html
 - Port/Adapter (data access abstraction)
 * The main packages are:
 - Application (Orchestration)
-- Doamin (Use case)
+- Domain (Use case)
 - Infrastructure (Web & Data access)
 
 This improves:
@@ -104,6 +104,8 @@ Centralized exception handling using @RestControllerAdvice ensures:
 * proper HTTP status mapping
 
 ## Performance
+For the assessment it is introduced two levels of performance
+improvements, to show some possibilities. 
 
 * Tested via Integration tests using MockMvc
 * Warm-up phase included
@@ -142,28 +144,16 @@ A composite index was introduced:
 - Caching reduced response time by ~35%
 - Total improvement ~46%
 
-Note: The results are not accurate or cientifical, due to the very limited 
+Note: The results are not accurate or scientific, due to the very limited 
 number of records in the database, and the influences of the local execution environment.
-
-### Trade-offs
-
-* Caching vs Data Freshness
-* Cached results may become stale
-* Mitigated using TTL
-* Indexing vs Write Cost
-* Improves read performance
-* Adds slight overhead on writes
-* Simplicity vs Production Readiness
-* Embedded H2 and Hazelcast used for simplicity
-* Production would require external systems
+Additionally, a real use-case would include write operations, which
+are affected for the index. 
 
 ## Possible Improvements
 
 * Cache hit/miss metrics
 * Load testing
 * Error resilience/Circuit breaker
-* Contract testing
-* Validation improvements
 * Production readiness:
 - External Hazelcast cluster or Redis
 - TTL tuning
@@ -174,17 +164,12 @@ number of records in the database, and the influences of the local execution env
 
 ### Security
 
-Recommended:
+The security has been discarded due to simplicity, but 
+it is recommended for production, at least:
 
-* OAuth2 (client credentials / auth code)
-* OIDC for identity
 * HTTPS mandatory
 * mTLS for service-to-service
 * API Gateway + rate limiting
-* Observability (advanced)
-* Micrometer + Prometheus
-* OpenTelemetry tracing
-* Centralized logging (ELK/Grafana)
 
 ## Conclusion
 

@@ -2,7 +2,7 @@ package com.example.assessmentddd.infrastructure.web;
 
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.exception.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -13,10 +13,10 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiErrorResponse> handleBadRequest(
@@ -25,13 +25,13 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "BAD_REQUEST",
+                HttpStatus.BAD_REQUEST.name(),
                 "Invalid request parameter: " + ex.getName(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
         );
 
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
 
     @ExceptionHandler(PriceNotFoundException.class)
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now().toString()
         );
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
 
     @ExceptionHandler(Exception.class)
@@ -57,35 +57,57 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "INTERNAL_SERVER_ERROR",
+                HttpStatus.INTERNAL_SERVER_ERROR.name(),
                 ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
         );
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleConstraintViolationException(ConstraintViolationException ex) {
-        return Map.of("error", "Invalid request parameters",
-                "message", ex.getMessage());
+    public ResponseEntity<ApiErrorResponse> handleConstraintViolationException(ConstraintViolationException ex,
+                                                                               HttpServletRequest request) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid request parameters",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now().toString()
+        );
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMissingParamsException(MissingServletRequestParameterException ex) {
-        return Map.of("error", "Invalid request parameters"
-                , "parameter", ex.getParameterName());
+    public ResponseEntity<ApiErrorResponse> handleMissingParamsException(MissingServletRequestParameterException ex,
+                                                                         HttpServletRequest request) {
+
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid request parameters",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now().toString()
+        );
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMethodValidationException(MissingServletRequestParameterException ex) {
-        return Map.of("error", "Invalid request parameters"
-                , "parameter", ex.getParameterName());
+    public ResponseEntity<ApiErrorResponse> handleMethodValidationException(HandlerMethodValidationException ex,
+                                                                            HttpServletRequest request) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid request parameters",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now().toString()
+        );
+        return ResponseEntity.status(error.getStatus()).body(error);
     }
-
-
 }
+
+
