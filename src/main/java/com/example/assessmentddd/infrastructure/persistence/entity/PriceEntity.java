@@ -29,8 +29,7 @@ public class PriceEntity {
 
     public PriceEntity() {}
 
-    public PriceEntity(Long id, Integer brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency) {
-        this.id = id;
+    public PriceEntity(Integer brandId, LocalDateTime startDate, LocalDateTime endDate, Integer priceList, Integer productId, Integer priority, BigDecimal price, String currency) {
         this.brandId = brandId;
         this.startDate = startDate;
         this.endDate = endDate;
