@@ -130,17 +130,20 @@ A composite index was introduced:
 
 ### Results
 
-| Scenario	           | Avg Response Time  |
-|:--------------------|:-------------------|
-| No index / No cache | 	 2.27 ms        |
-| Index / No cache	   | 1.62 ms            |
-| Index + Cache       | 	 1.07 ms        |
+| Scenario	           | Avg Response Time |
+|:--------------------|:------------------|
+| No index / No cache | 	 1.41 ms       |
+| Index / No cache	   | 1.17 ms           |
+| Index + Cache       | 	 0.76 ms       |
 
 ### Analysis
 
-- Indexing reduced query time by ~28%
-- Caching reduced response time by ~34%
-- Total improvement ~53%
+- Indexing reduced query time by ~17%
+- Caching reduced response time by ~35%
+- Total improvement ~46%
+
+Note: The results are not accurate or cientifical, due to the very limited 
+number of records in the database, and the influences of the local execution environment.
 
 ### Trade-offs
 
