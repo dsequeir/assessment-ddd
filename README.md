@@ -16,7 +16,7 @@ The solution focuses on:
 ## Technology Stack
 * 
 * Java 25
-* Spring Boot 4.0.4
+* Spring Boot 4.0.5
 * Spring Boot – application framework
 * Spring Web – REST API
 * Spring Cache – caching abstraction

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.4</version>
+        <version>4.0.5</version>
         <relativePath/>
     </parent>
     <groupId>com.example</groupId>
@@ -13,10 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>assessment-ddd</name>
     <description>Spring Boot microservice for price calculation following Hexagonal principles</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
     <developers>
         <developer>
             <id>dsequeir</id>
@@ -82,7 +78,6 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
-            <version>5.5.0</version>
         </dependency>
     </dependencies>
 
@@ -99,8 +94,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

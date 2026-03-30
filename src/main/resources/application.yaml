@@ -26,7 +26,7 @@ spring:
       data-locations: classpath:01_data.sql
       continue-on-error: false
 
-  management:
+management:
     endpoints:
       web:
         exposure:
@@ -39,6 +39,4 @@ logging:
 
 springdoc:
   api-docs:
-    enabled: false
-  swagger-ui:
-    url: /openapi.yaml
+    enabled: true
