@@ -27,7 +27,7 @@ The solution focuses on:
 
 ## Installation & Testing
 
-Tha application can be run via:
+The application can be run via:
 
 ```bash
     ./mvnw spring-boot:run

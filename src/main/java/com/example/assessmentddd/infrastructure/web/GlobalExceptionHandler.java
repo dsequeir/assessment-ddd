@@ -3,6 +3,8 @@ package com.example.assessmentddd.infrastructure.web;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiErrorResponse> handleBadRequest(
@@ -58,10 +61,12 @@ public class GlobalExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.name(),
-                ex.getMessage(),
+                "Unexpected error",
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
         );
+
+        log.error("Unexpected error {}", ex.getMessage());
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
@@ -72,7 +77,7 @@ public class GlobalExceptionHandler {
                                                                                HttpServletRequest request) {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Invalid request parameters",
+                HttpStatus.BAD_REQUEST.name(),
                 ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
@@ -87,7 +92,7 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Invalid request parameters",
+                HttpStatus.BAD_REQUEST.name(),
                 ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
@@ -101,7 +106,7 @@ public class GlobalExceptionHandler {
                                                                             HttpServletRequest request) {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
-                "Invalid request parameters",
+                HttpStatus.BAD_REQUEST.name(),
                 ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
