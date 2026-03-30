@@ -3,7 +3,8 @@
 ## Overview
 
 This project implements a REST API to retrieve the applicable price for a given product, brand, and application date.
-The applicable price is the top priority, if several are applicable. 
+If there are more than one prices applicable, the selected price is
+the one with bigger priority.
 
 The solution focuses on:
 
@@ -33,23 +34,20 @@ The application can be run via:
     ./mvnw spring-boot:run
 ```
 
-The application will start on localhost, port 8080
-
-To run the tests:
+The tests can be run via: 
 
 ```bash
 ./mvnw test
 ```
 
-To Verify the application:
-
-Once the application is running, you can test the API using:
+The API can be tested performing calls to the endpoint. 
 
 * Valid request with price found: 
-* 
+
 ```bash 
 curl "http://localhost:8080/api/v1/prices?applicationDate=2020-06-14T10:00:00&productId=35455&brandId=1"
 ```
+
 * Valid request with no price found:
 
 ```bash
@@ -61,6 +59,7 @@ curl "http://localhost:8080/api/v1/prices?applicationDate=2020-06-14T10:00:00&pr
 ```bash 
 curl "http://localhost:8080/api/v1/prices?productId=35455&brandId=1"
 ```
+
 ## API Documentation
 
  Available via Swagger:
@@ -79,22 +78,12 @@ http://localhost:8080/swagger-ui.html
 - Domain (Use case)
 - Infrastructure (Web & Data access)
 
-This improves:
-
-* testability
-* maintainability
-* flexibility of infrastructure changes
-
 ## Observability
 Logging Strategy:
 * INFO → request tracing (controller)
 * DEBUG → internal processing and cache miss (service)
 * WARN → business issues
-
-* Principles
-- minimal and meaningful logging
-- contextual data included
-- separation by layer
+* ERROR -> Unexpected error
 
 ## Error Handling
 
@@ -104,7 +93,8 @@ Centralized exception handling using @RestControllerAdvice ensures:
 * proper HTTP status mapping
 
 ## Performance
-For the assessment it is introduced two levels of performance
+
+For this assessment, there are two levels of performance
 improvements, to show some possibilities. 
 
 * Tested via Integration tests using MockMvc
@@ -144,37 +134,36 @@ A composite index was introduced:
 - Caching reduced response time by ~35%
 - Total improvement ~46%
 
-Note: The results are not accurate or scientific, due to the very limited 
+Note: The results are not scientific, due to the very limited 
 number of records in the database, and the influences of the local execution environment.
-Additionally, a real use-case would include write operations, which
-are affected for the index. 
+Consider that the test is considering the same request with 100% of cache hits.
+Additionally, a real use case would include write operations, which
+could be affected for the index. 
 
 ## Possible Improvements
 
 * Cache hit/miss metrics
-* Load testing
-* Error resilience/Circuit breaker
-* Production readiness:
 - External Hazelcast cluster or Redis
 - TTL tuning
 - Monitor cache hit ratio
 - External Database
 - Validate indexing with real data
 - Local/Test/Live environment configurations
+* Load testing
+* Error resilience
 
 ### Security
 
 The security has been discarded due to simplicity, but 
-it is recommended for production, at least:
+it is recommended for production, including at least:
 
-* HTTPS mandatory
+* HTTPS
 * mTLS for service-to-service
 * API Gateway + rate limiting
 
 ## Conclusion
 
-**This solution prioritizes:**
+**This solution prioritizes:
 
-* simplicity over production readiness
-* performance through measurable improvements
-* maintainable architecture
+* Simplicity over production readiness
+* Inclusion of measurable performance improvements
