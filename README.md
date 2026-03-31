@@ -79,11 +79,25 @@ http://localhost:8080/swagger-ui/index.html
 - Domain Pricing (Core domain & business rules)
 - Infrastructure (Web & Data access)
 
+### Pricing Rule
+
+The system selects the applicable price based on:
+
+- Valid date range
+- Product and brand
+- Highest priority (business rule)
+
+This rule is encapsulated in a domain policy (PriceSelector),
+keeping business logic isolated from application orchestration and
+the implementation/technical details of the data layer.
+The policy is applied in a Strategy pattern, applying max priority in this case,
+but adaptable to other alternative strategies without affecting the use case.
+
 ## Observability
 
 Logging Strategy:
 * INFO → request tracing (controller)
-* DEBUG → internal processing and cache miss (service)
+* DEBUG → internal processing and cache miss 
 * WARN → business issues
 * ERROR -> Unexpected error
 
