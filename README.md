@@ -68,17 +68,19 @@ http://localhost:8080/swagger-ui/index.html
 
 ## Architectural Decisions
 
-* Layered / Hexagonal-inspired design
+* Layered / Hexagonal design
 * The application separates concerns into:
 - Controller (API layer)
-- Service (application layer)
-- Port/Adapter (data access abstraction)
+- Use Case (application orchestration layer)
+- Domain (Policies & Ports)
+- Infrastructure (Adapters, web & data access)
 * The main packages are:
-- Application (Orchestration)
-- Domain (Use case)
+- Application (Use case)
+- Domain Pricing (Core domain & business rules)
 - Infrastructure (Web & Data access)
 
 ## Observability
+
 Logging Strategy:
 * INFO → request tracing (controller)
 * DEBUG → internal processing and cache miss (service)

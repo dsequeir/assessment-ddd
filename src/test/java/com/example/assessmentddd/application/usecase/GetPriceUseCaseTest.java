@@ -7,6 +7,7 @@ import com.example.assessmentddd.domain.pricing.model.Price;
 import com.example.assessmentddd.domain.pricing.policy.HighestPriorityPriceSelector;
 import com.example.assessmentddd.domain.pricing.policy.PriceSelector;
 import com.example.assessmentddd.domain.pricing.port.PricePort;
+import com.example.assessmentddd.shared.AssessmentConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,7 +75,7 @@ class GetPriceUseCaseTest {
         PriceNotFoundException exception = assertThrows(PriceNotFoundException.class,
                 () -> getPriceUseCase.getPrice(date, 99999, 999));
 
-        assertTrue(exception.getMessage().contains("No price"));
+        assertEquals(AssessmentConstants.MSG_PRICE_NOT_FOUND, exception.getMessage());
         verify(pricePort).findApplicablePrices(date, 99999, 999);
     }
 

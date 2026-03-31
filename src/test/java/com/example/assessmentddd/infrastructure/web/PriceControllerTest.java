@@ -101,17 +101,6 @@ class PriceControllerTest {
                 .andExpect(jsonPath("$.priceList").value(4));
     }
 
-    private void mockResponse(LocalDateTime date, Integer productId, Integer brandId,
-                              Integer priceList, double priceValue, String start, String end) {
-        PriceResponse response = new PriceResponse(
-                productId, brandId, priceList,
-                LocalDateTime.parse(start),
-                LocalDateTime.parse(end),
-                new BigDecimal(priceValue)
-        );
-        when(getPriceUseCase.getPrice(date, productId, brandId)).thenReturn(response);
-    }
-
     @Test
     @DisplayName("Should return 400 when applicationDate is empty")
     void shouldReturnBadRequestWhenApplicationDateIsEmpty() throws Exception {
@@ -147,4 +136,17 @@ class PriceControllerTest {
 
         verifyNoInteractions(getPriceUseCase);
     }
+
+    private void mockResponse(LocalDateTime date, Integer productId, Integer brandId,
+                              Integer priceList, double priceValue, String start, String end) {
+        PriceResponse response = new PriceResponse(
+                productId, brandId, priceList,
+                LocalDateTime.parse(start),
+                LocalDateTime.parse(end),
+                new BigDecimal(priceValue)
+        );
+        when(getPriceUseCase.getPrice(date, productId, brandId)).thenReturn(response);
+    }
+
+
 }
