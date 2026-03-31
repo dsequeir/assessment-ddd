@@ -70,10 +70,15 @@ http://localhost:8080/swagger-ui/index.html
 
 * Layered / Hexagonal design
 * The application separates concerns into:
-- Controller (API layer)
-- Use Case (application orchestration layer)
-- Domain (Policies & Ports)
-- Infrastructure (Adapters, web & data access)
+- Controller: exposes REST endpoints
+- UseCase: orchestrates application logic
+- Domain:
+    - Model: Price
+    - Policy: PriceSelector (business rule)
+    - Port: PricePort
+- Infrastructure:
+    - Persistence: JPA / H2
+    - Web: REST controllers
 * The main packages are:
 - Application (Use case)
 - Domain Pricing (Core domain & business rules)
