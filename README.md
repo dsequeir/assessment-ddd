@@ -185,7 +185,7 @@ it is recommended for production, including at least:
 
 ## Conclusion
 
-**This solution prioritizes:
+This solution prioritizes:
 
 * Simplicity over production readiness
 * Inclusion of measurable performance improvements
