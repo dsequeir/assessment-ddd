@@ -1,5 +1,6 @@
 package com.example.assessmentddd.application.usecase;
 
+import com.example.assessmentddd.application.DefaultPriceResponseMapper;
 import com.example.assessmentddd.application.PriceResponseMapper;
 import com.example.assessmentddd.application.dto.PriceResponse;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
@@ -45,7 +46,7 @@ class GetPriceUseCaseTest {
         testPrice.setEndDate(LocalDateTime.parse("2020-12-31T23:59:59"));
 
         PriceSelector priceSelector = new HighestPriorityPriceSelector();
-        PriceResponseMapper responseMapper = new PriceResponseMapper();
+        PriceResponseMapper responseMapper = new DefaultPriceResponseMapper();
         getPriceUseCase = new GetPriceUseCase(pricePort, priceSelector, responseMapper);
     }
 
