@@ -172,6 +172,7 @@ could be affected for the index.
 - Local/Test/Live environment configurations
 * Load testing
 * Error resilience
+* Environment-based configuration (profiles)
 
 ### Security
 
