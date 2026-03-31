@@ -63,8 +63,8 @@ curl "http://localhost:8080/api/v1/prices?productId=35455&brandId=1"
 ## API Documentation
 
  Available via Swagger:
- 
-http://localhost:8080/swagger-ui.html
+
+http://localhost:8080/swagger-ui/index.html
 
 ## Architectural Decisions
 
