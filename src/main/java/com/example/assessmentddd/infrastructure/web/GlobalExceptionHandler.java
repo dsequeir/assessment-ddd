@@ -1,6 +1,7 @@
 package com.example.assessmentddd.infrastructure.web;
 
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
+import com.example.assessmentddd.shared.AssessmentConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
-                "Invalid request parameter: " + ex.getName(),
+                AssessmentConstants.MSG_INVALID_REQUEST_PARAMETER + ex.getName(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
         );
@@ -44,7 +45,7 @@ public class GlobalExceptionHandler {
 
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
-                "PRICE_NOT_FOUND",
+                AssessmentConstants.ERROR_PRICE_NOT_FOUND,
                 ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.name(),
-                "Unexpected error",
+                AssessmentConstants.MSG_UNEXPECTED_ERROR,
                 request.getRequestURI(),
                 LocalDateTime.now().toString()
         );

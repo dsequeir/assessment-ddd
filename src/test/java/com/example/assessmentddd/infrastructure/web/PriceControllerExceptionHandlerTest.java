@@ -1,6 +1,6 @@
 package com.example.assessmentddd.infrastructure.web;
 
-import com.example.assessmentddd.application.service.PriceService;
+import com.example.assessmentddd.application.usecase.GetPriceUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class PriceControllerExceptionHandlerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private PriceService priceService;
+    private GetPriceUseCase getPriceUseCase;
 
     @Test
     @DisplayName("Should return 400 when request parameter is missing")
@@ -63,7 +63,7 @@ class PriceControllerExceptionHandlerTest {
     @Test
     @DisplayName("Should return 500 when unexpected error happens")
     void shouldReturnInternalServerErrorWhenUnexpectedErrorHappens() throws Exception {
-        when(priceService.getPrice(
+        when(getPriceUseCase.getPrice(
                 eq(LocalDateTime.of(2020, 6, 14, 10, 0, 0)),
                 eq(35455),
                 eq(1)))

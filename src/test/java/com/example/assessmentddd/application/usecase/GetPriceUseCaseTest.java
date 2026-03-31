@@ -1,14 +1,16 @@
-package com.example.assessmentddd.application.service;
+package com.example.assessmentddd.application.usecase;
 
+import com.example.assessmentddd.application.PriceResponseMapper;
 import com.example.assessmentddd.application.dto.PriceResponse;
 import com.example.assessmentddd.application.exception.PriceNotFoundException;
-import com.example.assessmentddd.domain.model.Price;
-import com.example.assessmentddd.domain.port.PricePort;
+import com.example.assessmentddd.domain.pricing.model.Price;
+import com.example.assessmentddd.domain.pricing.policy.HighestPriorityPriceSelector;
+import com.example.assessmentddd.domain.pricing.policy.PriceSelector;
+import com.example.assessmentddd.domain.pricing.port.PricePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -21,13 +23,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PriceServiceTest {
+class GetPriceUseCaseTest {
 
     @Mock
     private PricePort pricePort;
 
-    @InjectMocks
-    private PriceService priceService;
+    private GetPriceUseCase getPriceUseCase;
 
     private Price testPrice;
 
@@ -41,6 +42,10 @@ class PriceServiceTest {
         testPrice.setPrice(new BigDecimal("35.50"));
         testPrice.setStartDate(LocalDateTime.parse("2020-06-14T00:00:00"));
         testPrice.setEndDate(LocalDateTime.parse("2020-12-31T23:59:59"));
+
+        PriceSelector priceSelector = new HighestPriorityPriceSelector();
+        PriceResponseMapper responseMapper = new PriceResponseMapper();
+        getPriceUseCase = new GetPriceUseCase(pricePort, priceSelector, responseMapper);
     }
 
     @Test
@@ -51,7 +56,7 @@ class PriceServiceTest {
         when(pricePort.findApplicablePrices(date, 35455, 1))
                 .thenReturn(List.of(testPrice));
 
-        PriceResponse response = priceService.getPrice(date, 35455, 1);
+        PriceResponse response = getPriceUseCase.getPrice(date, 35455, 1);
 
         assertNotNull(response);
         assertEquals(35455, response.productId());
@@ -67,7 +72,7 @@ class PriceServiceTest {
                 .thenReturn(Collections.emptyList());
 
         PriceNotFoundException exception = assertThrows(PriceNotFoundException.class,
-                () -> priceService.getPrice(date, 99999, 999));
+                () -> getPriceUseCase.getPrice(date, 99999, 999));
 
         assertTrue(exception.getMessage().contains("No price"));
         verify(pricePort).findApplicablePrices(date, 99999, 999);
@@ -81,7 +86,7 @@ class PriceServiceTest {
         when(pricePort.findApplicablePrices(any(), anyInt(), anyInt()))
                 .thenReturn(List.of(testPrice));
 
-        priceService.getPrice(date, 35455, 1);
+        getPriceUseCase.getPrice(date, 35455, 1);
 
         verify(pricePort, times(1)).findApplicablePrices(date, 35455, 1);
         verifyNoMoreInteractions(pricePort);

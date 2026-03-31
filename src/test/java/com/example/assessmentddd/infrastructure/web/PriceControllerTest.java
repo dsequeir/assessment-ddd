@@ -1,6 +1,7 @@
 package com.example.assessmentddd.infrastructure.web;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
+import com.example.assessmentddd.application.usecase.GetPriceUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ class PriceControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private com.example.assessmentddd.application.service.PriceService priceService;
+    private GetPriceUseCase getPriceUseCase;
 
     @Test
     void test1_14h10_expectPriceList1_35_50() throws Exception {
@@ -108,7 +109,7 @@ class PriceControllerTest {
                 LocalDateTime.parse(end),
                 new BigDecimal(priceValue)
         );
-        when(priceService.getPrice(date, productId, brandId)).thenReturn(response);
+        when(getPriceUseCase.getPrice(date, productId, brandId)).thenReturn(response);
     }
 
     @Test
@@ -120,7 +121,7 @@ class PriceControllerTest {
                         .param("brandId", "1"))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(priceService);
+        verifyNoInteractions(getPriceUseCase);
     }
 
     @Test
@@ -132,7 +133,7 @@ class PriceControllerTest {
                         .param("brandId", "1"))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(priceService);
+        verifyNoInteractions(getPriceUseCase);
     }
 
     @Test
@@ -144,6 +145,6 @@ class PriceControllerTest {
                         .param("brandId", ""))
                 .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(priceService);
+        verifyNoInteractions(getPriceUseCase);
     }
 }

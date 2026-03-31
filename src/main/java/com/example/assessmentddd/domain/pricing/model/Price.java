@@ -1,4 +1,4 @@
-package com.example.assessmentddd.domain.model;
+package com.example.assessmentddd.domain.pricing.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

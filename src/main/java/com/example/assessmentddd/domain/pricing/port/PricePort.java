@@ -1,6 +1,6 @@
-package com.example.assessmentddd.domain.port;
+package com.example.assessmentddd.domain.pricing.port;
 
-import com.example.assessmentddd.domain.model.Price;
+import com.example.assessmentddd.domain.pricing.model.Price;
 
 import java.time.LocalDateTime;
 import java.util.List;

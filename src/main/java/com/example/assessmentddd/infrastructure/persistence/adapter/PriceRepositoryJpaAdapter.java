@@ -1,7 +1,7 @@
 package com.example.assessmentddd.infrastructure.persistence.adapter;
 
-import com.example.assessmentddd.domain.model.Price;
-import com.example.assessmentddd.domain.port.PricePort;
+import com.example.assessmentddd.domain.pricing.model.Price;
+import com.example.assessmentddd.domain.pricing.port.PricePort;
 import com.example.assessmentddd.infrastructure.persistence.PriceMapper;
 import com.example.assessmentddd.infrastructure.persistence.repository.SpringDataPriceRepository;
 import org.springframework.stereotype.Repository;

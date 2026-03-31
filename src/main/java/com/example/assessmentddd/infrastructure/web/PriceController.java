@@ -1,7 +1,7 @@
 package com.example.assessmentddd.infrastructure.web;
 
 import com.example.assessmentddd.application.dto.PriceResponse;
-import com.example.assessmentddd.application.service.PriceService;
+import com.example.assessmentddd.application.usecase.GetPriceUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -34,10 +34,10 @@ public class PriceController {
 
     private static final Logger log = LoggerFactory.getLogger(PriceController.class);
 
-    private final PriceService priceService;
+    private final GetPriceUseCase getPriceUseCase;
 
-    public PriceController(PriceService priceService) {
-        this.priceService = priceService;
+    public PriceController(GetPriceUseCase getPriceUseCase) {
+        this.getPriceUseCase = getPriceUseCase;
     }
 
     /**
@@ -116,6 +116,6 @@ public class PriceController {
             @RequestParam @NotNull @Positive  Integer brandId) {
         log.info("GET /api/v1/prices - productId={}, brandId={}, date={}",
                 productId, brandId, applicationDate);
-        return ResponseEntity.ok(priceService.getPrice(applicationDate, productId, brandId));
+        return ResponseEntity.ok(getPriceUseCase.getPrice(applicationDate, productId, brandId));
     }
 }

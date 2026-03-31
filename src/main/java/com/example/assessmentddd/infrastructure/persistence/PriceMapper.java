@@ -1,6 +1,6 @@
 package com.example.assessmentddd.infrastructure.persistence;
 
-import com.example.assessmentddd.domain.model.Price;
+import com.example.assessmentddd.domain.pricing.model.Price;
 import com.example.assessmentddd.infrastructure.persistence.entity.PriceEntity;
 
 public class PriceMapper {

@@ -1,6 +1,6 @@
 package com.example.assessmentddd.infrastructure.persistence.repository;
 
-import com.example.assessmentddd.domain.model.Price;
+import com.example.assessmentddd.domain.pricing.model.Price;
 import com.example.assessmentddd.infrastructure.persistence.PriceMapper;
 import com.example.assessmentddd.infrastructure.persistence.adapter.PriceRepositoryJpaAdapter;
 import org.junit.jupiter.api.BeforeEach;
